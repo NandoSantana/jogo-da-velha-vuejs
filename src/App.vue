@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <a href="/" class="menu">Home</a><img alt="Vue logo" src="./assets/logo.png" style="position: relative;z-index: 99"><a href="/ranking-total" class="menu">Ranking</a>
+    <a href="/" class="menu">Jogar</a><img alt="Vue logo" src="./assets/logo.png" style="position: relative;z-index: 99"><a href="/ranking-total" class="menu">Ranking</a>
     <router-view></router-view>
 <!--    <Game></Game>-->
   </div>
