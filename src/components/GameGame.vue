@@ -53,7 +53,7 @@
       </div>
     </div>
     <br />
-    <button @click="resetGame" class="end-game">Reiniciar Jogo</button>
+    <button @click="resetGame" class="end-game">Continuar</button>
   </div>
 </template>
 
