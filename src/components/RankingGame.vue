@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Ranking de Jogadores</h2>
-    <ol style="text-align: left;">
+    <ol style="text-align: center; list-style-type:none;">
       <li v-for="(player, i) in players" :key="i">
         {{i}}
         - Pontuação: {{ players[i][0].points }}

@@ -1,19 +1,18 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Game></Game>
+    <a href="/" class="menu">Home</a><img alt="Vue logo" src="./assets/logo.png" style="position: relative;z-index: 99"><a href="/ranking-total" class="menu">Ranking</a>
+    <router-view></router-view>
+<!--    <Game></Game>-->
   </div>
 </template>
 
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
 
-import Game from './components/GameGame.vue';
+// import Game from './components/GameGame.vue';
 export default {
   name: 'App',
-  components: {
-    Game
-  }
+
 }
 </script>
 
@@ -25,5 +24,16 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.menu {
+  background-color: darkseagreen;
+  width: 240px !important;
+  height: 50px;
+  margin-left: -70px;
+  margin-right: -80px;
+  padding: 10px;
+  display: inline-block;
+  color: #fff;
+  text-decoration: none;
 }
 </style>
