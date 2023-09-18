@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-
     <RankingGame :players="RankingUpdate" />
   </div>
 <!--  :players="RankingUpdate"-->
@@ -33,7 +32,7 @@ export default {
       headers: headers
     };
     // Realize a requisição POST para cadastrar a pontuação
-    const response = await axios.get('http://127.0.0.1:8000/api/top-five-ranking', '', config);
+    const response = await axios.get('http://127.0.0.1:8000/api/top-total-ranking', '', config);
     // Verifique a resposta do servidor (opcional)
     if (response.status === 200) {
       console.log('Pontuação resgatada com sucesso!');

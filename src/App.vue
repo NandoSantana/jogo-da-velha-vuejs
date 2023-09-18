@@ -36,4 +36,17 @@ export default {
   color: #fff;
   text-decoration: none;
 }
+@media (max-width: 768px) {
+  .menu {
+    background-color: darkseagreen;
+    width: 170px !important;
+    height: 50px;
+    margin-left: -83px;
+    margin-right: -80px;
+    padding: 10px;
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+  }
+}
 </style>
