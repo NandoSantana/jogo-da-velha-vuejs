@@ -1,5 +1,13 @@
 <template>
   <div class="container">
+    <div v-if="modalErrorRanking" class="modal">
+      <div class="modal-content">
+        <h2>Erro ao inserir a jogada no ranking</h2>
+
+        <br/>
+        <button @click="modalErrorRanking=false" class="start-game">Começar Jogo</button>
+      </div>
+    </div>
     <div v-if="showModal" class="modal">
       <div class="modal-content">
         <h2>Configuração de Jogadores</h2>
@@ -16,6 +24,7 @@
         <button @click="startGame" class="start-game">Começar Jogo</button>
       </div>
     </div>
+
     <div v-if="showModalVelha" class="modal">
       <div class="modal-content">
         <h2>Deu Velha!</h2>
@@ -36,11 +45,11 @@
       <div>{{ playerXName }} ({{ playerXScore }} pontos) contra {{ playerOName }} ({{ playerOScore }} pontos)</div>
     </div>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6 stage">
         <BoardGame :squares="squares" :status="status" @square-click="handleClick" />
       </div>
       <div class="col-md-6 ranking">
-        <RankingGame />
+        <RankingGame :players="RankingUpdate"/>
       </div>
     </div>
     <br />
@@ -69,20 +78,26 @@ export default {
       showModal: true,
       showModalWinner: false,
       showModalVelha: false,
-      winner:null,
+      winner: null,
+      modalErrorRanking: false,
+      RankingUpdate: null,
     };
   },
   computed: {
     status() {
       switch (this.currentPlayer) {
         case "X":
-          return  `A vez de: ${this.playerXName}` ;
+          return `A vez de: ${this.playerXName}`;
         case "O":
-          return  `A vez de: ${this.playerOName}`;
-        default: `Current player: ...`;
+          return `A vez de: ${this.playerOName}`;
+        default:
+          `Current player: ...`;
       }
       return `Current player:...}`;
     },
+  },
+  async mounted(){
+    await this.atualizaRanking();
   },
   methods: {
     handleClick(index) {
@@ -95,8 +110,7 @@ export default {
           this.playerXScore++;
           this.winner = this.playerXName
           this.showModalWinner = true;
-        }
-        else if (winner === 'O') {
+        } else if (winner === 'O') {
           this.playerOScore++;
           this.winner = this.playerOName
           this.showModalWinner = true;
@@ -138,35 +152,82 @@ export default {
       }
       this.showModal = false;
     },
-    async endGame(){
-        try {
-          // Dados do jogador e sua pontuação (substitua com os dados reais)
-          const jogador = {
-            jogadorO: {nome:this.playerOName, pontuacao: this.playerOScore},
-            jogadorX: {nome:this.playerXName, pontuacao: this.playerXScore}
-          };
+    async endGame() {
+      this.showModalWinner = false;
+      try {
+        // Dados do jogador e sua pontuação (substitua com os dados reais)
+        const jogador = {
+          "jogadores": [
+            {"nome": this.playerOName, "pontuacao": this.playerOScore},
+            {"nome": this.playerXName, "pontuacao": this.playerXScore}
+          ]
 
-          // Realize a requisição POST para cadastrar a pontuação
-          const response = await axios.post('URL_DO_SERVIDOR/cadastrar-pontuacao', jogador);
+        };
+        const headers = {
+          // 'Authorization': 'Bearer SeuTokenJWT', // Exemplo de token de autorização JWT
+          'Content-Type': 'application/json', // Tipo de conteúdo JSON
+          // Adicione mais headers personalizados conforme necessário
+        };
 
-          // Verifique a resposta do servidor (opcional)
-          if (response.status === 200) {
-            console.log('Pontuação cadastrada com sucesso!');
-          } else {
-            console.error('Falha ao cadastrar a pontuação.');
-          }
-        } catch (error) {
-          console.error('Erro ao cadastrar a pontuação:', error);
+        // Configuração da requisição com headers
+        const config = {
+          headers: headers
+        };
+
+        // Realize a requisição POST para cadastrar a pontuação
+        const response = await axios.post('http://127.0.0.1:8000/api/registrar-ranking', jogador, config);
+
+        // Verifique a resposta do servidor (opcional)
+        if (response.status === 200) {
+          console.log('Pontuação cadastrada com sucesso!');
+          await this.atualizaRanking();
+        } else {
+          console.error('Falha ao cadastrar a pontuação.');
         }
+      } catch (error) {
+        console.error('Erro ao cadastrar a pontuação:', error);
+        this.modalErrorRanking = true;
       }
+    },
+
+  async atualizaRanking() {
+    const headers = {
+      'Content-Type': 'application/json', // Tipo de conteúdo JSON
+      // Adicione mais headers personalizados conforme necessário
+    };
+    // Configuração da requisição com headers
+    const config = {
+      headers: headers
+    };
+    // Realize a requisição POST para cadastrar a pontuação
+    const response = await axios.get('http://127.0.0.1:8000/api/top-five-ranking', '', config);
+    // Verifique a resposta do servidor (opcional)
+    if (response.status === 200) {
+      console.log('Pontuação resgatada com sucesso!');
+      // this.dadosRecebidos = novosDados;
+      this.RankingUpdate = response.data;
     }
+  },
 
-
+  }
 }
 </script>
 
 <style scoped>
-
+.stage {
+  border: 5px dotted slategrey;
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+  left:-10px;
+}
+.ranking {
+  border: 1px solid red;
+  border-radius: 20px;
+  padding: 30px;
+  position: relative;
+  left:10px;
+}
 .end-game {
   /* Estilos para o término de um jogo */
   background-color: lightgreen; /* Cor de fundo vermelha (pode ser alterada) */
@@ -265,6 +326,15 @@ export default {
     display: none;
   }
 
+  .stage {
+    border: 5px dotted slategrey;
+    border-radius: 20px;
+    padding: 10px;
+    position: relative;
+    margin:10px;
+
+
+  }
 
 
   .score {

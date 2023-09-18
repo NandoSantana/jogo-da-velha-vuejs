@@ -1,32 +1,28 @@
 <template>
   <div>
     <h2>Ranking de Jogadores</h2>
-    <ol>
-      <li v-for="(player, index) in rankedPlayers" :key="index">
-        {{ player.nome }} - Pontuação: {{ player.pontuacao }}
+    <ol style="text-align: left;">
+      <li v-for="(player, i) in players" :key="i">
+        {{i}}
+        - Pontuação: {{ players[i][0].points }}
       </li>
     </ol>
   </div>
 </template>
 
 <script>
+// import axios from "axios";
+
 export default {
+  props: ['players'],
   data() {
     return {
-      players: [
-        { nome: "Jogador 1", pontuacao: 100 },
-        { nome: "Jogador 2", pontuacao: 75 },
-        { nome: "Jogador 3", pontuacao: 120 },
-        // Adicione mais jogadores conforme necessário
-      ]
+      // players: [
+      //
+      // ]
     };
   },
-  computed: {
-    rankedPlayers() {
-      // Classifique os jogadores em ordem decrescente de pontuação
-      return this.players.slice().sort((a, b) => b.pontuacao - a.pontuacao);
-    }
-  }
+
 };
 </script>
 
